@@ -1,10 +1,13 @@
 import xml.etree.ElementTree as ET
+from zipfile import ZipFile
+from shutil import copyfile
+import os
 
 office = "{urn:oasis:names:tc:opendocument:xmlns:office:1.0}"
 text = "{urn:oasis:names:tc:opendocument:xmlns:text:1.0}"
-tree1 = ET.parse('content.xml')
+tree1 = ET.parse('read/content.xml')
 file_odt = tree1.getroot()
-tree2 = ET.parse('document.xml')
+tree2 = ET.parse('read/document.xml')
 file_docx = tree2.getroot()
 
 
@@ -31,6 +34,9 @@ for i in file_odt.findall(office + "body"):
                 m += 1
 
 print("All news count is " + str(m-1))
-ET.dump(tree1)
+tree1.write("content.xml")
+copyfile('read/test-odt.zip', 'test-odt.zip')
 
-
+with ZipFile('test-odt.zip', 'a') as zf:
+    zf.write("content.xml")
+os.rename('test-odt.zip', 'test-odt.docx')
